@@ -96,57 +96,69 @@ public class Conexion {
     
     public Vector RetrievePersonas(){
         GraphDatabaseService db = Conectar();
-        ResourceIterator<Node> personas = db.findNodes(NodeType.Persona);
         Vector<String> nombres = new Vector();
-        while(personas.hasNext()){
-            Node persona = personas.next();
-            nombres.add((String)persona.getProperty("nombre"));
+        try(Transaction tx = db.beginTx()){
+            ResourceIterator<Node> personas = db.findNodes(NodeType.Persona);
+            while(personas.hasNext()){
+                Node persona = personas.next();
+                nombres.add((String)persona.getProperty("nombre"));
+            }
+            tx.success();
         }
         return nombres;
     }
     
     public Vector RetrieveInstituciones(){
         GraphDatabaseService db = Conectar();
-        ResourceIterator<Node> instituciones = db.findNodes(NodeType.Institucion);
         Vector<String> nombres = new Vector();
-        while(instituciones.hasNext()){
-            Node persona = instituciones.next();
-            nombres.add((String)persona.getProperty("nombre"));
+        try(Transaction tx = db.beginTx()){
+            ResourceIterator<Node> instituciones = db.findNodes(NodeType.Institucion);
+            while(instituciones.hasNext()){
+                Node persona = instituciones.next();
+                nombres.add((String)persona.getProperty("nombre"));
+            }
+            tx.success();
         }
         return nombres;
     }
     
     public Vector Recomendar(String profesion){
         GraphDatabaseService db = Conectar();
-        Node empresa = db.findNode(NodeType.Institucion, "nombre", this.nombreEmpresa);
-        //Encontrar todas las personas que contrato la empresa
         Vector<Node> personasVector = new Vector<Node>();
-        ResourceIterator<Node> personas = db.findNodes(NodeType.Persona);
-        Vector<String> nombres = new Vector();
-        while(personas.hasNext()){
-            Node persona = personas.next();
-            if (persona.getSingleRelationship(RelationType.CONTRATO_A,Direction.INCOMING).getType()!=RelationType.CONTRATO_A){
-                if( ((String)persona.getProperty("profesion")).equalsIgnoreCase(profesion)){
-                    personasVector.add(persona);   
+        try(Transaction tx = db.beginTx()){
+            Node empresa = db.findNode(NodeType.Institucion, "nombre", this.nombreEmpresa);
+            //Encontrar todas las personas que contrato la empresa
+            ResourceIterator<Node> personas = db.findNodes(NodeType.Persona);
+            Vector<String> nombres = new Vector();
+            while(personas.hasNext()){
+                Node persona = personas.next();
+                if (persona.getSingleRelationship(RelationType.CONTRATO_A,Direction.INCOMING).getType()!=RelationType.CONTRATO_A){
+                    if( ((String)persona.getProperty("profesion")).equalsIgnoreCase(profesion)){
+                        personasVector.add(persona);   
+                    }
                 }
             }
+            tx.success();
         }
         return personasVector;
     }
     public Vector Recomendar(String profesion, String localizacion){
         GraphDatabaseService db = Conectar();
-        Node empresa = db.findNode(NodeType.Institucion, "nombre", this.nombreEmpresa);
-        //Encontrar todas las personas que contrato la empresa
         Vector<Node> personasVector = new Vector<Node>();
-        ResourceIterator<Node> personas = db.findNodes(NodeType.Persona);
-        Vector<String> nombres = new Vector();
-        while(personas.hasNext()){
-            Node persona = personas.next();
-            if (persona.getSingleRelationship(RelationType.CONTRATO_A,Direction.INCOMING).getType()!=RelationType.CONTRATO_A){
-                if( ((String)persona.getProperty("profesion")).equalsIgnoreCase(profesion)&&((String)persona.getProperty("localizacion")).equalsIgnoreCase(localizacion)){
-                    personasVector.add(persona);   
+        try(Transaction tx = db.beginTx()){
+            Node empresa = db.findNode(NodeType.Institucion, "nombre", this.nombreEmpresa);
+            //Encontrar todas las personas que contrato la empresa
+            ResourceIterator<Node> personas = db.findNodes(NodeType.Persona);
+            Vector<String> nombres = new Vector();
+            while(personas.hasNext()){
+                Node persona = personas.next();
+                if (persona.getSingleRelationship(RelationType.CONTRATO_A,Direction.INCOMING).getType()!=RelationType.CONTRATO_A){
+                    if( ((String)persona.getProperty("profesion")).equalsIgnoreCase(profesion)&&((String)persona.getProperty("localizacion")).equalsIgnoreCase(localizacion)){
+                        personasVector.add(persona);   
+                    }
                 }
             }
+            tx.success();
         }
         return personasVector;
     }
