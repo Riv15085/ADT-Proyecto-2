@@ -132,7 +132,8 @@ public class Conexion {
             Vector<String> nombres = new Vector();
             while(personas.hasNext()){
                 Node persona = personas.next();
-                if (persona.getSingleRelationship(RelationType.CONTRATO_A,Direction.INCOMING).getType()!=RelationType.CONTRATO_A){
+                //if (persona.getSingleRelationship(RelationType.CONTRATO_A,Direction.INCOMING).getType()!=RelationType.CONTRATO_A){
+                if (persona.getSingleRelationship(RelationType.CONTRATO_A, Direction.INCOMING)!=null){
                     if( ((String)persona.getProperty("profesion")).equalsIgnoreCase(profesion)){
                         personasVector.add(persona);   
                     }
@@ -152,7 +153,8 @@ public class Conexion {
             Vector<String> nombres = new Vector();
             while(personas.hasNext()){
                 Node persona = personas.next();
-                if (persona.getSingleRelationship(RelationType.CONTRATO_A,Direction.INCOMING).getType()!=RelationType.CONTRATO_A){
+                //if (persona.getSingleRelationship(RelationType.CONTRATO_A,Direction.INCOMING).getType()!=RelationType.CONTRATO_A){
+                if (persona.getSingleRelationship(RelationType.CONTRATO_A, Direction.INCOMING)!=null){
                     if( ((String)persona.getProperty("profesion")).equalsIgnoreCase(profesion)&&((String)persona.getProperty("localizacion")).equalsIgnoreCase(localizacion)){
                         personasVector.add(persona);   
                     }
